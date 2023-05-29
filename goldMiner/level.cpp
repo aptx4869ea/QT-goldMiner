@@ -31,6 +31,8 @@ Level::Level(QWidget *parent, int levelNum_) :
     {
     case 1:
         generateBags(2);
+        generateStrengups(2);
+        generateStrengdowns(2);
         generateDiamonds(2);
         generateBombPlus(1);
         generateRandomObjects(8,12);//第一关-正常关
@@ -277,7 +279,7 @@ void Level::generateStrengups(int numStrengups){
         {
             flag=true;
             x = QRandomGenerator::global()->bounded(0, 600);
-            y = QRandomGenerator::global()->bounded(0, 200); // 时间道具在比较下面
+            y = QRandomGenerator::global()->bounded(100, 200); // 时间道具在比较下面
             radius = QRandomGenerator::global()->bounded(25, 35);
             for(GameObject* object:gameObjects)
             {
@@ -302,7 +304,7 @@ void Level::generateStrengdowns(int numStrengdowns){
         {
             flag=true;
             x = QRandomGenerator::global()->bounded(0, 600);
-            y = QRandomGenerator::global()->bounded(0, 200); // 时间道具在比较下面
+            y = QRandomGenerator::global()->bounded(100, 200); // 时间道具在比较下面
             radius = QRandomGenerator::global()->bounded(25, 35);
             for(GameObject* object:gameObjects)
             {
@@ -370,8 +372,13 @@ void Level::updateTimer()
                 hook->multiplier /= 2;
             }
         }
-        while (StrengupTimeDeq[0] == 0){
-            StrengupTimeDeq.pop_front();
+        while (!StrengupTimeDeq.empty()){
+            if (StrengupTimeDeq[0] == 0){
+                StrengupTimeDeq.pop_front();
+            }
+            else{
+                break;
+            }
         }
     }
     if (!StrengdownTimeDeq.empty()){
@@ -382,8 +389,13 @@ void Level::updateTimer()
                 hook->multiplier *= 2;
             }
         }
-        while (StrengdownTimeDeq[0] == 0){
-            StrengdownTimeDeq.pop_front();
+        while (!StrengdownTimeDeq.empty()){
+            if (StrengdownTimeDeq[0] == 0){
+                StrengdownTimeDeq.pop_front();
+            }
+            else{
+                break;
+            }
         }
     }
     if(Bomb::bombImageTime > 0)
